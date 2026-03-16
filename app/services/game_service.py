@@ -6,6 +6,7 @@ from sqlmodel import select  # type: ignore
 from app.models import Game  # type: ignore
 from app.schemas import GameCreate  # type: ignore
 from app.services.steam_service import steam_service  # type: ignore
+from app.services.hltb_service import hltb_service  # type: ignore
 
 
 # =============================================================================
@@ -69,16 +70,19 @@ async def search_and_add_game(session: AsyncSession, query: str) -> Optional[Gam
     appid = top_result.id
     
     # Check if we already have this game in our DB
-    existing_game = get_game(session, appid)
+    existing_game = await get_game(session, appid)
     if existing_game:
         return existing_game
         
-    # 3. Fetch full details for this AppID
+    # 3. Fetch full details for this AppID from Steam
     details = await steam_service.get_app_details(appid)
     if not details:
         return None
         
-    # 4. Map Steam's data to our SQLModel 'Game'
+    # 4. Fetch HLTB times
+    hltb_times = await hltb_service.get_game_times(top_result.title)
+    
+    # 5. Map Steam + HLTB data to our SQLModel 'Game'
     # Steam data can be messy, so we use .get() to avoid errors
     new_game = Game(
         id=appid,
@@ -88,10 +92,13 @@ async def search_and_add_game(session: AsyncSession, query: str) -> Optional[Gam
         description=details.get("short_description", ""),
         header_image=details.get("header_image", ""),
         review_score=details.get("metacritic", {}).get("score"),
-        steamos_support=details.get("platforms", {}).get("linux", False)
+        steamos_support=details.get("platforms", {}).get("linux", False),
+        hltb_main=hltb_times.get("main"),
+        hltb_extra=hltb_times.get("extra"),
+        hltb_comp=hltb_times.get("comp")
     )
     
-    # 5. Save to database
+    # 6. Save to database
     session.add(new_game)
     await session.commit()
     await session.refresh(new_game)

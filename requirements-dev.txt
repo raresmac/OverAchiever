@@ -27,6 +27,7 @@ redis==5.0.1
 # External API & Scraping
 httpx==0.26.0
 beautifulsoup4==4.12.3
+howlongtobeatpy==0.1.2
 
 # Utilities
 python-dotenv==1.0.0
