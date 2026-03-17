@@ -1,8 +1,8 @@
 # OverAchiever
 
-**Video Game Metadata Ingestion & Progress Tracking Pipeline**
+> **Automated video game tracking and metadata enrichment pipeline.**
 
-OverAchiever is a high-performance backend system designed to automate the lifecycle of video game tracking. By orchestrating multiple external data sources (Steam, HowLongToBeat), it transforms simple user queries into rich, multi-dimensional relational data without manual entry.
+OverAchiever is a high-performance backend system designed to simplify the lifecycle of game tracking. By orchestrating data from the **Steam Store** and **HowLongToBeat**, it transforms simple queries into rich, multi-dimensional profiles—eliminating manual record-keeping and data entry.
 
 ---
 
@@ -34,7 +34,7 @@ OverAchiever is designed as a **Decision Support and Data Enrichment Pipeline**:
 | :--- | :--- |
 | **Framework** | [FastAPI](https://fastapi.tiangolo.com/) (Python 3.12+) |
 | **Database / ORM** | [PostgreSQL](https://www.postgresql.org/) / [SQLModel](https://sqlmodel.tiangolo.com/) |
-| **Containerization** | [Docker](https://www.docker.com/) & Docker Compose |
+| **Containerization** | [Docker](https://www.docker.com/) |
 | **Async Client** | [httpx](https://www.python-httpx.org/) |
 | **Messaging** | [Apache Kafka](https://kafka.apache.org/) (Work-in-progress Sync Pipeline) |
 | **Caching** | [Redis](https://redis.io/) |
@@ -45,22 +45,21 @@ OverAchiever is designed as a **Decision Support and Data Enrichment Pipeline**:
 
 ### Prerequisites
 
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed.
-* (Local Dev) Python 3.12+ and a virtual environment.
+*   [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed.
 
-### 1. Docker Deployment (Recommended)
+### Setup & Launch
 
-The fastest way to spin up the entire cluster (API, Database, Redis, Kafka, Worker):
+The fastest way to spin up the entire cluster (API, Database, Redis, Kafka, Worker) is via Docker Compose:
 
-1. **Clone the repository**:
+1.  **Clone the repository**:
 
     ```bash
     git clone https://github.com/your-username/OverAchiever.git
     cd OverAchiever
     ```
 
-2. **Configure Environment**:
-    Create a `.env` file in the root directory:
+2.  **Configure Environment**:
+    Create a `.env` file in the root directory (refer to the sample below):
 
     ```env
     POSTGRES_USER=postgres
@@ -71,37 +70,17 @@ The fastest way to spin up the entire cluster (API, Database, Redis, Kafka, Work
     STEAM_API_KEY=your_key_here
     ```
 
-3. **Build and Launch**:
+3.  **Build and Launch**:
 
     ```bash
     docker-compose up --build -d
     ```
 
-### 2. Manual Installation (Local Testing)
-
-1. **Create Virtual Environment**:
-
-    ```bash
-    python -m venv venv
-    .\venv\Scripts\activate  # Windows
-    # source venv/bin/activate  # Unix/Mac
-    ```
-
-2. **Install Dependencies**:
-
-    ```bash
-    pip install -r requirements-dev.txt
-    ```
-
-3. **Run with Uvicorn**:
-
-    ```bash
-    uvicorn app.main:app --reload
-    ```
+Once the containers are running, you can access the interactive API docs at `http://localhost:8000/docs`.
 
 ---
 
-## 🔌 API Usage Examples
+## API Usage Examples
 
 Once the server is running, access the interactive documentation at `http://localhost:8000/docs`.
 
@@ -117,7 +96,7 @@ Finds the #1 match on Steam, fetches HLTB times, and saves the fully enriched re
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 OverAchiever/
